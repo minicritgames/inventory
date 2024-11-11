@@ -27,7 +27,7 @@ namespace Minikit.Inventory
 
         public List<MKTag> GetTags()
         {
-            return tags;
+            return new List<MKTag>(tags);
         }
 
         public MKShard GetFirstStaticShard(MKTagQuery _tagQuery = null)
