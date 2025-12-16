@@ -27,7 +27,7 @@ namespace Minikit.Inventory
 
         public List<MKTag> GetTags()
         {
-            return new List<MKTag>(tags);
+            return tags != null ? new List<MKTag>(tags) : new List<MKTag>();
         }
 
         public MKShard GetFirstStaticShard(MKTagQuery _tagQuery = null)
@@ -84,17 +84,20 @@ namespace Minikit.Inventory
         public List<T> GetAllDynamicShards<T>(MKTagQuery _tagQuery = null, bool _returnFirst = false) where T : MKShard
         {
             List<T> foundShards = new();
-            foreach (MKShard shard in dynamicShards)
+            if (dynamicShards != null)
             {
-                if (shard.GetType().IsAssignableFrom(typeof(T)))
+                foreach (MKShard shard in dynamicShards)
                 {
-                    if (_tagQuery?.Test(shard.tags) ?? true) // If no query is supplied, pass every shard
+                    if (shard.GetType().IsAssignableFrom(typeof(T)))
                     {
-                        foundShards.Add(shard as T);
-
-                        if (_returnFirst)
+                        if (_tagQuery?.Test(shard.tags) ?? true) // If no query is supplied, pass every shard
                         {
-                            return foundShards;
+                            foundShards.Add(shard as T);
+
+                            if (_returnFirst)
+                            {
+                                return foundShards;
+                            }
                         }
                     }
                 }
@@ -105,11 +108,21 @@ namespace Minikit.Inventory
 #if UNITY_EDITOR
         public void AddStaticShard(MKShard _shard)
         {
+            if (staticShards == null)
+            {
+                staticShards = new List<MKShard>();
+            }
+            
             staticShards.Add(_shard);
         }
 
         public void AddDynamicShard(MKShard _shard)
         {
+            if (dynamicShards == null)
+            {
+                dynamicShards = new List<MKShard>();
+            }
+            
             dynamicShards.Add(_shard);
         }
 #endif // UNITY_EDITOR
