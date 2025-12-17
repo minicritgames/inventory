@@ -2,9 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using Newtonsoft.Json;
-using UnityEditor;
 using UnityEngine;
 
 namespace Minikit.Inventory
@@ -24,7 +22,7 @@ namespace Minikit.Inventory
         [SerializeReference] [JsonProperty] private List<MKShard> staticShards;
 
         /// <summary> Dynamic Shards contain data that may change. Dynamic shards CAN be added and removed at runtime, and DO network </summary>
-        [SerializeReference] [JsonProperty] private List<MKShard> dynamicShards;
+        [SerializeReference] [JsonIgnore /*Dynamic shards are runtime only*/] private List<MKShard> dynamicShards;
 
 
         public List<MKTag> GetTags()

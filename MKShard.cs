@@ -12,7 +12,7 @@ namespace Minikit.Inventory
     [MKShardHidden]
     public abstract class MKShard
     {
-        [JsonProperty] public List<MKTag> tags = new();
+        [JsonProperty(Order = -100)] public List<MKTag> tags = new();
 
 
         public virtual string GetDebugPrintString() { return "";  }
@@ -149,7 +149,7 @@ namespace Minikit.Inventory
     [MKShard(shardType = "Sprite")]
     public class MKShard_Sprite : MKShard
     {
-        public Sprite sprite;
+        [JsonProperty] public Sprite sprite;
         
         
         public override string GetDebugPrintString()

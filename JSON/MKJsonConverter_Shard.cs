@@ -6,7 +6,7 @@ using Newtonsoft.Json.Linq;
 
 namespace Minikit.Inventory
 {
-    public class MKJsonShardConverter : MKJsonConverter
+    public class MKJsonConverter_Shard : MKJsonConverter
     {
         private const string shardTypeKey = "_type";
         
@@ -20,10 +20,10 @@ namespace Minikit.Inventory
             }
             
             // Temporarily remove this converter to prevent re-entry
-            MKJsonShardConverter jsonShardConverter = _serializer.Converters.OfType<MKJsonShardConverter>().FirstOrDefault();
-            if (jsonShardConverter != null)
+            MKJsonConverter_Shard jsonConverterShard = _serializer.Converters.OfType<MKJsonConverter_Shard>().FirstOrDefault();
+            if (jsonConverterShard != null)
             {
-                _serializer.Converters.Remove(jsonShardConverter);
+                _serializer.Converters.Remove(jsonConverterShard);
             }
             
             JObject jo = JObject.FromObject(_value, _serializer);
@@ -34,9 +34,9 @@ namespace Minikit.Inventory
             }
 
             // Restore the converter
-            if (jsonShardConverter != null)
+            if (jsonConverterShard != null)
             {
-                _serializer.Converters.Add(jsonShardConverter);
+                _serializer.Converters.Add(jsonConverterShard);
             }
             
             jo.WriteTo(_writer);
