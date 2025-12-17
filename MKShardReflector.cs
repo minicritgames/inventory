@@ -8,6 +8,12 @@ using UnityEngine;
 namespace Minikit.Inventory
 {
     [AttributeUsage(AttributeTargets.Class, Inherited = false)]
+    public class MKShardAttribute : Attribute
+    {
+        public string shardType;
+    }
+    
+    [AttributeUsage(AttributeTargets.Class, Inherited = false)]
     public class MKShardHiddenAttribute : Attribute
     {
     }
@@ -28,11 +34,13 @@ namespace Minikit.Inventory.Internal
                 {
                     if (type.IsSubclassOf(typeof(MKShard))
                         && !type.IsAbstract // Ignore abstract classes since we don't want to register them
+                        && type.GetCustomAttribute<MKShardAttribute>() is MKShardAttribute shardAttribute // Make sure it has a shard attribute
+                        && !string.IsNullOrEmpty(shardAttribute.shardType) // and the shard attribute has a valid type
                         && type.GetCustomAttribute<MKShardHiddenAttribute>() == null) // Ignore shards that requested to be hidden
                     {
-                        nativelyDefinedShardTypesByName.Add(type.FullName, type);
+                        nativelyDefinedShardTypesByName.Add(shardAttribute.shardType, type);
 
-                        //Debug.Log($"Registered {typeof(MKShard).Name}: {type.Name} with key {type.FullName}");
+                        //Debug.Log($"Registered {nameof(MKShard)}: {type.Name} with key {shardAttribute.shardType}");
                     }
                 }
             }
@@ -46,7 +54,20 @@ namespace Minikit.Inventory.Internal
                 return nativelyDefinedShardTypesByName[_key];
             }
 
-            Debug.LogError($"Failed to get registered {typeof(MKShard).Name} type from key {_key}");
+            Debug.LogError($"Failed to get registered {nameof(MKShard)} type from key {_key}");
+            return null;
+        }
+
+        public static string GetRegisteredShardTypeName(Type _type)
+        {
+            foreach (KeyValuePair<string, Type> pair in nativelyDefinedShardTypesByName)
+            {
+                if (pair.Value == _type)
+                {
+                    return pair.Key;
+                }
+            }
+
             return null;
         }
 

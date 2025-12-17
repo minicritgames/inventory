@@ -3,12 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Newtonsoft.Json;
 using UnityEditor;
 using UnityEngine;
 
 namespace Minikit.Inventory
 {
-    [System.Serializable]
+    [Serializable]
+    [JsonObject(MemberSerialization.OptIn)]
     [CreateAssetMenu(fileName = "ItemDefinition", menuName = "Minikit/Inventory/ItemDefinition", order = 1)]
     public class MKItemDefinitionScriptableObject : ScriptableObject
     {
@@ -16,13 +18,13 @@ namespace Minikit.Inventory
         // [SerializeField] doesn't allow children of the declared type, we use SerializeReference here
 
         /// <summary> Tags that only exist on the item definition </summary>
-        [SerializeField] private List<MKTag> tags = new();
+        [SerializeField] [JsonProperty] private List<MKTag> tags = new();
 
         /// <summary> Static Shards contain data that never changes. Static shards cannot be added or removed at runtime, and don't network </summary>
-        [SerializeReference] private List<MKShard> staticShards;
+        [SerializeReference] [JsonProperty] private List<MKShard> staticShards;
 
         /// <summary> Dynamic Shards contain data that may change. Dynamic shards CAN be added and removed at runtime, and DO network </summary>
-        [SerializeReference] private List<MKShard> dynamicShards;
+        [SerializeReference] [JsonProperty] private List<MKShard> dynamicShards;
 
 
         public List<MKTag> GetTags()

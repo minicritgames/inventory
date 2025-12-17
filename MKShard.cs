@@ -1,34 +1,35 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 using UnityEditor;
 using UnityEngine;
  
 namespace Minikit.Inventory
 {
     [Serializable]
+    [JsonObject(MemberSerialization.OptIn)]
     [MKShardHidden]
-    public class MKShard
+    public abstract class MKShard
     {
-        public List<MKTag> tags;
+        [JsonProperty] public List<MKTag> tags = new();
 
 
         public virtual string GetDebugPrintString() { return "";  }
 
         public void OnAddedToItem(MKItem _item)
         {
-
         }
 
         public void OnRemovedFromItem(MKItem _item)
         {
-
         }
     }
 
+    [MKShard(shardType = "Text")]
     public class MKShard_Text : MKShard
     {
-        public string text;
+        [JsonProperty] public string text;
 
 
         public override string GetDebugPrintString()
@@ -37,9 +38,10 @@ namespace Minikit.Inventory
         }
     }
 
+    [MKShard(shardType = "Float")]
     public class MKShard_NumberFloat : MKShard
     {
-        public float number;
+        [JsonProperty] public float number;
 
 
         public override string GetDebugPrintString()
@@ -48,9 +50,10 @@ namespace Minikit.Inventory
         }
     }
 
+    [MKShard(shardType = "Int")]
     public class MKShard_NumberInt : MKShard
     {
-        public int number;
+        [JsonProperty] public int number;
 
 
         public override string GetDebugPrintString()
@@ -59,9 +62,10 @@ namespace Minikit.Inventory
         }
     }
 
+    [MKShard(shardType = "Double")]
     public class MKShard_NumberDouble : MKShard
     {
-        public double number;
+        [JsonProperty] public double number;
 
 
         public override string GetDebugPrintString()
@@ -70,9 +74,10 @@ namespace Minikit.Inventory
         }
     }
 
+    [MKShard(shardType = "Bool")]
     public class MKShard_Bool : MKShard
     {
-        public bool value;
+        [JsonProperty] public bool value;
 
 
         public override string GetDebugPrintString()
@@ -81,9 +86,10 @@ namespace Minikit.Inventory
         }
     }
 
+    [MKShard(shardType = "Vector2")]
     public class MKShard_Vector2 : MKShard
     {
-        public Vector2 vector2;
+        [JsonProperty] public Vector2 vector2;
 
 
         public override string GetDebugPrintString()
@@ -92,9 +98,10 @@ namespace Minikit.Inventory
         }
     }
 
+    [MKShard(shardType = "Vector3")]
     public class MKShard_Vector3 : MKShard
     {
-        public Vector3 vector3;
+        [JsonProperty] public Vector3 vector3;
 
 
         public override string GetDebugPrintString()
@@ -103,9 +110,10 @@ namespace Minikit.Inventory
         }
     }
 
+    [MKShard(shardType = "Rect")]
     public class MKShard_Rect : MKShard
     {
-        public Rect rect;
+        [JsonProperty] public Rect rect;
 
 
         public override string GetDebugPrintString()
@@ -114,9 +122,10 @@ namespace Minikit.Inventory
         }
     }
 
+    [MKShard(shardType = "Color")]
     public class MKShard_Color : MKShard
     {
-        public Color color;
+        [JsonProperty] public Color color;
 
 
         public override string GetDebugPrintString()
@@ -125,20 +134,41 @@ namespace Minikit.Inventory
         }
     }
 
+    [MKShard(shardType = "Tag")]
     public class MKShard_Tag : MKShard
     {
-        public MKTag abilityTag;
+        [JsonProperty] public MKTag abilityTag;
+        
+        
+        public override string GetDebugPrintString()
+        {
+            return abilityTag.ToString();
+        }
     }
 
+    [MKShard(shardType = "Sprite")]
     public class MKShard_Sprite : MKShard
     {
         public Sprite sprite;
+        
+        
+        public override string GetDebugPrintString()
+        {
+            return sprite.ToString();
+        }
     }
 
+    [MKShard(shardType = "Box")]
     public class MKShard_Box : MKShard
     {
-        public Vector3 size;
-        public Vector3 offset;
-        public Vector3 rotation;
+        [JsonProperty] public Vector3 size;
+        [JsonProperty] public Vector3 offset;
+        [JsonProperty] public Vector3 rotation;
+        
+        
+        public override string GetDebugPrintString()
+        {
+            return $"Box (Size={size.ToString()}, Offset={offset.ToString()}, Rotation={rotation.ToString()})";
+        }
     }
 } // Minikit.Inventory namespace
