@@ -75,6 +75,30 @@ namespace Minikit.Inventory
             return false;
         }
 
+        public MKSlot GetFirstSlot(MKTagQuery _slotTagQuery = null)
+        {
+            return GetFirstSlot<MKSlot>(_slotTagQuery);
+        }
+
+        public T GetFirstSlot<T>(MKTagQuery _slotTagQuery = null) where T : MKSlot
+        {
+            foreach (MKSlot itSlot in IterateSlots())
+            {
+                if (_slotTagQuery != null
+                    && !_slotTagQuery.Test(itSlot.slotTags))
+                {
+                    continue;
+                }
+
+                if (itSlot is T slot)
+                {
+                    return slot;
+                }
+            }
+
+            return null;
+        }
+        
         public List<MKSlot> GetSlots(MKTagQuery _slotTagQuery = null)
         {
             return GetSlots<MKSlot>(_slotTagQuery);
@@ -100,6 +124,36 @@ namespace Minikit.Inventory
             return foundSlots;
         }
 
+        public MKItem GetFirstItem(MKTagQuery _slotTagQuery = null, MKTagQuery _itemTagQuery = null)
+        {
+            return GetFirstItem<MKItem>(_slotTagQuery, _itemTagQuery);
+        }
+        
+        public T GetFirstItem<T>(MKTagQuery _slotTagQuery = null, MKTagQuery _itemTagQuery = null) where T : MKItem
+        {
+            foreach (MKSlot slot in IterateSlots())
+            {
+                if (_slotTagQuery != null
+                    && !_slotTagQuery.Test(slot.slotTags))
+                {
+                    continue;
+                }
+
+                if (slot.item is T item)
+                {
+                    if (_itemTagQuery != null
+                        && !_itemTagQuery.Test(item.tags))
+                    {
+                        continue;
+                    }
+
+                    return item;
+                }
+            }
+
+            return null;
+        }
+        
         public List<MKItem> GetItems(MKTagQuery _slotTagQuery = null, MKTagQuery _itemTagQuery = null)
         {
             return GetItems<MKItem>(_slotTagQuery, _itemTagQuery);
@@ -116,16 +170,15 @@ namespace Minikit.Inventory
                     continue;
                 }
 
-                if (slot.item != null
-                    && slot.item is T)
+                if (slot.item is T item)
                 {
                     if (_itemTagQuery != null
-                        && !_itemTagQuery.Test(slot.item.tags))
+                        && !_itemTagQuery.Test(item.tags))
                     {
                         continue;
                     }
 
-                    foundItems.Add(slot.item as T);
+                    foundItems.Add(item);
                 }
             }
 
