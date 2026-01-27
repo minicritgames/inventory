@@ -83,18 +83,17 @@ namespace Minikit.Inventory
         public List<T> GetSlots<T>(MKTagQuery _slotTagQuery = null) where T : MKSlot
         {
             List<T> foundSlots = new();
-            foreach (MKSlot slot in IterateSlots())
+            foreach (MKSlot itSlot in IterateSlots())
             {
                 if (_slotTagQuery != null
-                    && !_slotTagQuery.Test(slot.slotTags))
+                    && !_slotTagQuery.Test(itSlot.slotTags))
                 {
                     continue;
                 }
 
-                if (slot.item != null
-                    && slot.item is T)
+                if (itSlot is T slot)
                 {
-                    foundSlots.Add(slot as T);
+                    foundSlots.Add(slot);
                 }
             }
 
