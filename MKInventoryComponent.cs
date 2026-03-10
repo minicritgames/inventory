@@ -8,7 +8,7 @@ namespace Minikit.Inventory
     /// <summary> Represents a collection of bags that can be held on a GameObject </summary>
     public class MKInventoryComponent : MonoBehaviour
     {
-        [SerializeField] private List<MKSlot> slots = new();
+        [SerializeField] protected List<MKSlot> slots = new();
 
 
         public void AddSlot(MKSlot _slot)
@@ -43,7 +43,7 @@ namespace Minikit.Inventory
             }
         }
 
-        public bool LootItem(MKItem _item)
+        public virtual bool LootItem(MKItem _item)
         {
             foreach (MKSlot slot in slots)
             {
