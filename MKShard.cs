@@ -26,6 +26,7 @@ namespace Minikit.Inventory
         }
     }
 
+    [Serializable]
     [MKShard(shardType = "Text")]
     public class MKShard_Text : MKShard
     {
@@ -38,6 +39,7 @@ namespace Minikit.Inventory
         }
     }
 
+    [Serializable]
     [MKShard(shardType = "Float")]
     public class MKShard_NumberFloat : MKShard
     {
@@ -50,6 +52,7 @@ namespace Minikit.Inventory
         }
     }
 
+    [Serializable]
     [MKShard(shardType = "Int")]
     public class MKShard_NumberInt : MKShard
     {
@@ -62,6 +65,7 @@ namespace Minikit.Inventory
         }
     }
 
+    [Serializable]
     [MKShard(shardType = "Double")]
     public class MKShard_NumberDouble : MKShard
     {
@@ -74,6 +78,7 @@ namespace Minikit.Inventory
         }
     }
 
+    [Serializable]
     [MKShard(shardType = "Bool")]
     public class MKShard_Bool : MKShard
     {
@@ -86,6 +91,7 @@ namespace Minikit.Inventory
         }
     }
 
+    [Serializable]
     [MKShard(shardType = "Vector2")]
     public class MKShard_Vector2 : MKShard
     {
@@ -98,6 +104,7 @@ namespace Minikit.Inventory
         }
     }
 
+    [Serializable]
     [MKShard(shardType = "Vector3")]
     public class MKShard_Vector3 : MKShard
     {
@@ -110,6 +117,7 @@ namespace Minikit.Inventory
         }
     }
 
+    [Serializable]
     [MKShard(shardType = "Rect")]
     public class MKShard_Rect : MKShard
     {
@@ -122,6 +130,7 @@ namespace Minikit.Inventory
         }
     }
 
+    [Serializable]
     [MKShard(shardType = "Color")]
     public class MKShard_Color : MKShard
     {
@@ -134,6 +143,7 @@ namespace Minikit.Inventory
         }
     }
 
+    [Serializable]
     [MKShard(shardType = "Tag")]
     public class MKShard_Tag : MKShard
     {
@@ -146,6 +156,7 @@ namespace Minikit.Inventory
         }
     }
 
+    [Serializable]
     [MKShard(shardType = "Sprite")]
     public class MKShard_Sprite : MKShard
     {
@@ -158,6 +169,7 @@ namespace Minikit.Inventory
         }
     }
 
+    [Serializable]
     [MKShard(shardType = "Box")]
     public class MKShard_Box : MKShard
     {
