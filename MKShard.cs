@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using Newtonsoft.Json;
 using UnityEditor;
 using UnityEngine;
@@ -40,7 +41,7 @@ namespace Minikit.Inventory
 
         public override string GetDebugPrintString()
         {
-            return number.ToString();
+            return number.ToString(CultureInfo.InvariantCulture);
         }
     }
 
@@ -66,7 +67,7 @@ namespace Minikit.Inventory
 
         public override string GetDebugPrintString()
         {
-            return number.ToString();
+            return number.ToString(CultureInfo.InvariantCulture);
         }
     }
 
