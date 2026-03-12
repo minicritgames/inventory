@@ -16,14 +16,6 @@ namespace Minikit.Inventory
 
 
         public virtual string GetDebugPrintString() { return "";  }
-
-        public void OnAddedToItem(MKItem _item)
-        {
-        }
-
-        public void OnRemovedFromItem(MKItem _item)
-        {
-        }
     }
 
     [Serializable]
