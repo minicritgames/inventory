@@ -1,0 +1,16 @@
+{
+    "name": "Minikit.Inventory",
+    "rootNamespace": "Minikit.Inventory",
+    "references": [
+        "Minikit.Framework"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

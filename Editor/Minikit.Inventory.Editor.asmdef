@@ -1,0 +1,19 @@
+{
+    "name": "Minikit.Inventory.Editor",
+    "rootNamespace": "Minikit.Inventory",
+    "references": [
+        "Minikit.Inventory",
+        "Minikit.Framework"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
