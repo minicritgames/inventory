@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -17,6 +16,18 @@ namespace Minikit.Inventory
     public class MKShardHiddenAttribute : Attribute
     {
     }
+
+    [AttributeUsage(AttributeTargets.Class, Inherited = false)]
+    public class MKShardDynamicCompanionAttribute : Attribute
+    {
+        public Type companionType;
+
+
+        public MKShardDynamicCompanionAttribute(Type _companionType)
+        {
+            companionType = _companionType;
+        }
+    }
 } // Minikit.Inventory namespace
 
 namespace Minikit.Inventory.Internal
@@ -24,6 +35,7 @@ namespace Minikit.Inventory.Internal
     public static class MKShardReflector
     {
         private static Dictionary<string, Type> nativelyDefinedShardTypesByName = new();
+        private static Dictionary<Type/*static shard*/, Type/*companion dynamic shard*/> companionShardTypes = new();
 
 
         static MKShardReflector()
@@ -40,6 +52,12 @@ namespace Minikit.Inventory.Internal
                     {
                         nativelyDefinedShardTypesByName.Add(shardAttribute.shardType, type);
 
+                        if (type.GetCustomAttribute<MKShardDynamicCompanionAttribute>() is MKShardDynamicCompanionAttribute companionAttribute
+                            && companionAttribute.companionType != null)
+                        {
+                            companionShardTypes.Add(type, companionAttribute.companionType);
+                        }
+
                         //Debug.Log($"Registered {nameof(MKShard)}: {type.Name} with key {shardAttribute.shardType}");
                     }
                 }
@@ -47,6 +65,11 @@ namespace Minikit.Inventory.Internal
         }
 
 
+        public static Type GetCompanionShard(this MKShard _shard)
+        {
+            return companionShardTypes.GetValueOrDefault(_shard?.GetType());
+        }
+        
         public static Type GetRegisteredShardType(string _key)
         {
             if (nativelyDefinedShardTypesByName.ContainsKey(_key))

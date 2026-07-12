@@ -1,57 +1,38 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Minikit.Inventory
 {
     /// <summary> Represents a collection of bags that can be held on a GameObject </summary>
     public class MKInventoryComponent : MonoBehaviour
     {
-        [SerializeField] protected List<MKSlot> slots = new();
+        /// <summary> Raised when any bag's contents change (placement, removal, or stack count) </summary>
+        [HideInInspector] public UnityEvent OnContentsChanged = new();
+
+        [SerializeReference] protected List<MKBag> bags = new();
 
 
-        public void AddSlot(MKSlot _slot)
+        protected virtual void Awake()
         {
-            if (!slots.Contains(_slot))
+            foreach (MKBag bag in bags)
             {
-                slots.Add(_slot);
+                bag.OnChanged += BagChanged;
             }
         }
-
-        public void AddSlots(List<MKSlot> _slots)
-        {
-            foreach (MKSlot slot in _slots)
-            {
-                AddSlot(slot);
-            }
-        }
-
-        public void RemoveSlot(MKSlot _slot)
-        {
-            if (slots.Contains(_slot))
-            {
-                slots.Remove(_slot);
-            }
-        }
-
-        public void RemoveSlots(List<MKSlot> _slots)
-        {
-            foreach (MKSlot slot in _slots)
-            {
-                RemoveSlot(slot);
-            }
-        }
-
+        
+        
         public virtual bool LootItem(MKItem _item)
         {
-            foreach (MKSlot slot in slots)
+            foreach (MKBag bag in bags)
             {
-                if (slot.CanHoldItem(_item))
+                switch (bag.TryLoot(_item))
                 {
-                    slot.SetItem(_item);
-                    OnItemAdded(_item);
-
-                    return true;
+                    case MKLootResult.Placed:
+                        OnItemAdded(_item);
+                        return true;
+                    case MKLootResult.Merged:
+                        return true;
                 }
             }
 
@@ -60,18 +41,88 @@ namespace Minikit.Inventory
 
         public bool RemoveItem(MKItem _item)
         {
-            foreach (MKSlot slot in slots)
+            foreach (MKBag bag in bags)
             {
-                if (slot.item == _item)
+                if (bag.Remove(_item))
                 {
-                    slot.SetItem(null);
                     OnItemRemoved(_item);
-
                     return true;
                 }
             }
 
             return false;
+        }
+
+        public int GetItemCount(MKItemDefinitionScriptableObject _definition)
+        {
+            int total = 0;
+            foreach (MKSlot slot in IterateSlots())
+            {
+                if (slot.item != null
+                    && slot.item.itemDefinition == _definition)
+                {
+                    total += slot.item.stackCount;
+                }
+            }
+
+            return total;
+        }
+
+        public bool ConsumeItem(MKItemDefinitionScriptableObject _definition, int _count)
+        {
+            if (_count <= 0
+                || GetItemCount(_definition) < _count)
+            {
+                return false;
+            }
+
+            List<MKItem> emptied = new();
+            foreach (MKSlot slot in IterateSlots())
+            {
+                if (_count <= 0)
+                {
+                    break;
+                }
+
+                if (slot.item != null
+                    && slot.item.itemDefinition == _definition)
+                {
+                    int available = slot.item.stackCount;
+                    if (available > _count)
+                    {
+                        slot.item.SetStackCount(available - _count);
+                        _count = 0;
+                    }
+                    else
+                    {
+                        _count -= available;
+                        emptied.Add(slot.item);
+                    }
+                }
+            }
+
+            foreach (MKItem item in emptied)
+            {
+                RemoveItem(item);
+            }
+
+            OnContentsChanged.Invoke();
+
+            return true;
+        }
+
+        public void AddBag(MKBag _bag)
+        {
+            if (!bags.Contains(_bag))
+            {
+                _bag.OnChanged += BagChanged;
+                bags.Add(_bag);
+            }
+        }
+
+        public IReadOnlyList<MKBag> GetBags()
+        {
+            return bags;
         }
 
         public MKSlot GetFirstSlot(MKTagQuery _slotTagQuery = null)
@@ -97,7 +148,7 @@ namespace Minikit.Inventory
 
             return null;
         }
-        
+
         public List<MKSlot> GetSlots(MKTagQuery _slotTagQuery = null)
         {
             return GetSlots<MKSlot>(_slotTagQuery);
@@ -127,7 +178,7 @@ namespace Minikit.Inventory
         {
             return GetFirstItem<MKItem>(_slotTagQuery, _itemTagQuery);
         }
-        
+
         public T GetFirstItem<T>(MKTagQuery _slotTagQuery = null, MKTagQuery _itemTagQuery = null) where T : MKItem
         {
             foreach (MKSlot slot in IterateSlots())
@@ -152,7 +203,7 @@ namespace Minikit.Inventory
 
             return null;
         }
-        
+
         public List<MKItem> GetItems(MKTagQuery _slotTagQuery = null, MKTagQuery _itemTagQuery = null)
         {
             return GetItems<MKItem>(_slotTagQuery, _itemTagQuery);
@@ -186,7 +237,13 @@ namespace Minikit.Inventory
 
         public IEnumerable<MKSlot> IterateSlots()
         {
-            return slots;
+            foreach (MKBag bag in bags)
+            {
+                foreach (MKSlot slot in bag.IterateSlots())
+                {
+                    yield return slot;
+                }
+            }
         }
 
         protected virtual void OnItemAdded(MKItem _item)
@@ -197,6 +254,11 @@ namespace Minikit.Inventory
         protected virtual void OnItemRemoved(MKItem _item)
         {
 
+        }
+
+        private void BagChanged()
+        {
+            OnContentsChanged.Invoke();
         }
     }
 }// Minikit.Inventory namespace

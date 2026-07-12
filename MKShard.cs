@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using Newtonsoft.Json;
@@ -168,11 +167,38 @@ namespace Minikit.Inventory
         [JsonProperty] public Vector3 size;
         [JsonProperty] public Vector3 offset;
         [JsonProperty] public Vector3 rotation;
-        
-        
+
+
         public override string GetDebugPrintString()
         {
             return $"Box (Size={size.ToString()}, Offset={offset.ToString()}, Rotation={rotation.ToString()})";
+        }
+    }
+
+    [Serializable]
+    [MKShard(shardType = "Stackable")]
+    [MKShardDynamicCompanion(typeof(MKShard_StackCount))]
+    public class MKShard_Stackable : MKShard
+    {
+        [JsonProperty] public int max = 99;
+
+
+        public override string GetDebugPrintString()
+        {
+            return $"Stackable (Max={max})";
+        }
+    }
+
+    [Serializable]
+    [MKShard(shardType = "StackCount")]
+    public class MKShard_StackCount : MKShard
+    {
+        [JsonProperty] public int current = 1;
+
+
+        public override string GetDebugPrintString()
+        {
+            return $"StackCount (Current={current})";
         }
     }
 } // Minikit.Inventory namespace
