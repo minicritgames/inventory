@@ -50,11 +50,11 @@ namespace Minikit.Inventory.Editor
 
                 if (shardContainerOption == 0)
                 {
-                    itemDefinition.AddStaticShard(shard);
+                    itemDefinition.Editor_AddStaticShard(shard);
                 }
                 else if (shardContainerOption == 1)
                 {
-                    itemDefinition.AddDynamicShard(shard);
+                    itemDefinition.Editor_AddDynamicShard(shard);
                 }
 
                 EditorUtility.SetDirty(itemDefinition);

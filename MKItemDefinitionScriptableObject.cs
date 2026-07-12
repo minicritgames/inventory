@@ -105,7 +105,7 @@ namespace Minikit.Inventory
         }
 
 #if UNITY_EDITOR
-        public void AddStaticShard(MKShard _shard)
+        public void Editor_AddStaticShard(MKShard _shard)
         {
             if (staticShards == null)
             {
@@ -115,7 +115,7 @@ namespace Minikit.Inventory
             staticShards.Add(_shard);
         }
 
-        public void AddDynamicShard(MKShard _shard)
+        public void Editor_AddDynamicShard(MKShard _shard)
         {
             if (dynamicShards == null)
             {

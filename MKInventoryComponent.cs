@@ -260,5 +260,17 @@ namespace Minikit.Inventory
         {
             OnContentsChanged.Invoke();
         }
+        
+#if UNITY_EDITOR
+        public void Editor_AddBag(MKBag _bag)
+        {
+            if (bags == null)
+            {
+                bags = new List<MKBag>();
+            }
+            
+            bags.Add(_bag);
+        }
+#endif // UNITY_EDITOR
     }
 }// Minikit.Inventory namespace
