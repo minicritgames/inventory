@@ -15,6 +15,13 @@ namespace Minikit.Inventory
 
 
         public virtual string GetDebugPrintString() { return "";  }
+
+        public virtual MKShard Clone()
+        {
+            MKShard clone = (MKShard)MemberwiseClone();
+            clone.tags = new List<MKTag>(tags);
+            return clone;
+        }
     }
 
     [Serializable]

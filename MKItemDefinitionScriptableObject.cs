@@ -20,8 +20,9 @@ namespace Minikit.Inventory
         /// <summary> Static Shards contain data that never changes. Static shards cannot be added or removed at runtime, and don't network </summary>
         [SerializeReference] [JsonProperty] private List<MKShard> staticShards;
 
-        /// <summary> Dynamic Shards contain data that may change. Dynamic shards CAN be added and removed at runtime, and DO network </summary>
-        [SerializeReference] [JsonIgnore /*Dynamic shards are runtime only*/] private List<MKShard> dynamicShards;
+        /// <summary> Templates for Dynamic Shards, which contain data that may change. Each item gets its own copy of every
+        /// template (with its authored starting values); dynamic shards CAN be added and removed at runtime, and DO network </summary>
+        [SerializeReference] [JsonProperty] private List<MKShard> dynamicShards;
 
 
         public List<MKTag> GetTags()
@@ -49,7 +50,7 @@ namespace Minikit.Inventory
             List<T> foundShards = new();
             foreach (MKShard shard in staticShards)
             {
-                if (shard.GetType().IsAssignableFrom(typeof(T)))
+                if (typeof(T).IsAssignableFrom(shard.GetType()))
                 {
                     if (_tagQuery?.Test(shard.tags) ?? true) // If no query is supplied, pass every shard
                     {
@@ -87,7 +88,7 @@ namespace Minikit.Inventory
             {
                 foreach (MKShard shard in dynamicShards)
                 {
-                    if (shard.GetType().IsAssignableFrom(typeof(T)))
+                    if (typeof(T).IsAssignableFrom(shard.GetType()))
                     {
                         if (_tagQuery?.Test(shard.tags) ?? true) // If no query is supplied, pass every shard
                         {

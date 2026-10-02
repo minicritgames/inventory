@@ -25,7 +25,10 @@ namespace Minikit.Inventory
 
             tags = _itemDefinition.GetTags();
 
-            dynamicShards.AddRange(itemDefinition.GetAllDynamicShards());
+            foreach (MKShard dynamicShardTemplate in itemDefinition.GetAllDynamicShards())
+            {
+                dynamicShards.Add(dynamicShardTemplate.Clone());
+            }
             if (_additionalDynamicShards != null)
             {
                 dynamicShards.AddRange(_additionalDynamicShards);
@@ -125,7 +128,7 @@ namespace Minikit.Inventory
             List<T> foundShards = new();
             foreach (MKShard dynamicShard in dynamicShards)
             {
-                if (dynamicShard.GetType().IsAssignableFrom(typeof(T)))
+                if (typeof(T).IsAssignableFrom(dynamicShard.GetType()))
                 {
                     if (_tagQuery?.Test(dynamicShard.tags) ?? true) // If no query is supplied, pass every shard
                     {
@@ -175,13 +178,10 @@ namespace Minikit.Inventory
             {
                 if (staticShard.GetCompanionShard() is Type companionShardType)
                 {
-                    foreach (MKShard shard in dynamicShards)
+                    // A dynamic shard template on the definition already provides the companion (with its authored starting values)
+                    if (dynamicShards.Any(_shard => _shard.GetType() == companionShardType))
                     {
-                        if (shard.GetType() == companionShardType)
-                        {
-                            // Skip creating the dynamic companion shard if we already have one
-                            continue;
-                        }
+                        continue;
                     }
 
                     if (Activator.CreateInstance(companionShardType) is MKShard companionShard)
