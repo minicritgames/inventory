@@ -30,7 +30,7 @@ namespace Minikit.Inventory
         {
             foreach (MKSlot slot in slots)
             {
-                if (!slot.slotTags.Contains(MKTag.Get(MKInventoryTags.slotNoLoot))
+                if (!slot.slotTags.HasTag(MKTag.Get(MKInventoryTags.slotNoLoot))
                     && slot.CanHoldItem(_item))
                 {
                     slot.SetItem(_item);

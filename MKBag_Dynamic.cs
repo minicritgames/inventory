@@ -8,8 +8,8 @@ namespace Minikit.Inventory
     [Serializable]
     public class MKBag_Dynamic : MKBag
     {
-        [SerializeField] private List<MKTag> slotTags = new();
-        [SerializeField] private MKTagQuery itemTagQuery = new(MKTagQueryCondition.Any, null);
+        [SerializeField] private MKTagContainer slotTags = new();
+        [SerializeField] private MKTagQuery itemTagQuery = new(MKTagQueryCondition.Any);
         [SerializeField] private int capacity = 0; // 0 = unbounded
         [SerializeField] private bool stacking = true;
 
@@ -20,7 +20,7 @@ namespace Minikit.Inventory
         {
         }
 
-        public MKBag_Dynamic(List<MKTag> _slotTags, MKTagQuery _itemTagQuery, int _capacity, bool _stacking)
+        public MKBag_Dynamic(MKTagContainer _slotTags, MKTagQuery _itemTagQuery, int _capacity, bool _stacking)
         {
             slotTags = _slotTags;
             itemTagQuery = _itemTagQuery;
@@ -95,7 +95,7 @@ namespace Minikit.Inventory
 
             MKSlot newSlot = new()
             {
-                slotTags = new List<MKTag>(slotTags),
+                slotTags = new MKTagContainer(slotTags),
                 itemTagQuery = itemTagQuery
             };
             slots.Add(newSlot);

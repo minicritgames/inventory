@@ -9,7 +9,7 @@ namespace Minikit.Inventory
     /// <summary> Represents a single object that can be held within a bag </summary>
     public class MKItem
     {
-        public List<MKTag> tags = new();
+        public MKTagContainer tags = new();
 
         protected List<MKShard> dynamicShards = new();
         public MKItemDefinitionScriptableObject itemDefinition { get; private set; }
@@ -93,14 +93,14 @@ namespace Minikit.Inventory
                 return false;
             }
 
-            if (tags.Count != _other.tags.Count)
+            if (tags.count != _other.tags.count)
             {
                 return false;
             }
 
             foreach (MKTag tag in tags)
             {
-                if (!_other.tags.Contains(tag))
+                if (!_other.tags.HasTagExact(tag))
                 {
                     return false;
                 }

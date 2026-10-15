@@ -11,7 +11,7 @@ namespace Minikit.Inventory
     [MKShardHidden]
     public abstract class MKShard
     {
-        [JsonProperty(Order = -100)] public List<MKTag> tags = new();
+        [JsonProperty(Order = -100)] public MKTagContainer tags = new();
 
 
         public virtual string GetDebugPrintString() { return "";  }
@@ -19,7 +19,7 @@ namespace Minikit.Inventory
         public virtual MKShard Clone()
         {
             MKShard clone = (MKShard)MemberwiseClone();
-            clone.tags = new List<MKTag>(tags);
+            clone.tags = new MKTagContainer(tags);
             return clone;
         }
     }

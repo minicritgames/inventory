@@ -1,7 +1,7 @@
 
 namespace Minikit.Inventory
 {
-    public class MKInventoryTags
+    public static class MKInventoryTags
     {
         [MKNativeTag] public const string slotNoLoot = "Slot.NoLoot";
     }

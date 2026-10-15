@@ -15,7 +15,7 @@ namespace Minikit.Inventory
         // [SerializeField] doesn't allow children of the declared type, we use SerializeReference here
 
         /// <summary> Tags that only exist on the item definition </summary>
-        [SerializeField] [JsonProperty] private List<MKTag> tags = new();
+        [SerializeField] [JsonProperty] private MKTagContainer tags = new();
 
         /// <summary> Static Shards contain data that never changes. Static shards cannot be added or removed at runtime, and don't network </summary>
         [SerializeReference] [JsonProperty] private List<MKShard> staticShards;
@@ -25,9 +25,9 @@ namespace Minikit.Inventory
         [SerializeReference] [JsonProperty] private List<MKShard> dynamicShards;
 
 
-        public List<MKTag> GetTags()
+        public MKTagContainer GetTags()
         {
-            return tags != null ? new List<MKTag>(tags) : new List<MKTag>();
+            return new MKTagContainer(tags);
         }
 
         public MKShard GetFirstStaticShard(MKTagQuery _tagQuery = null)

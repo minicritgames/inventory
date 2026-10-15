@@ -13,10 +13,10 @@ namespace Minikit.Inventory
         public UnityEvent<MKItem, MKItem> OnItemChanged = new();
         
         /// <summary> Tags that define this slot (Slot.Backpack, Slot.Equipment.Helmet, etc) </summary>
-        public List<MKTag> slotTags = new();
+        public MKTagContainer slotTags = new();
 
         /// <summary> The tag query that determines what items are allowed to be placed in this slot </summary>
-        public MKTagQuery itemTagQuery = new(MKTagQueryCondition.All, null);
+        public MKTagQuery itemTagQuery = new(MKTagQueryCondition.All);
 
         /// <summary> The item currently in this slot </summary>
         public MKItem item { get; private set; } = null;
