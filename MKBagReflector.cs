@@ -1,29 +1,16 @@
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 
 namespace Minikit.Inventory.Internal
 {
     public static class MKBagReflector
     {
-        private static List<Type> nativelyDefinedBagTypes = new();
+        private static List<Type> nativelyDefinedBagTypes;
 
 
         static MKBagReflector()
         {
-            foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
-            {
-                foreach (Type type in assembly.GetTypes())
-                {
-                    if (type.IsSubclassOf(typeof(MKBag))
-                        && !type.IsAbstract) // Ignore abstract classes since we don't want to register them
-                    {
-                        nativelyDefinedBagTypes.Add(type);
-
-                        //Debug.Log($"Registered {nameof(MKBag)}: {type.Name}");
-                    }
-                }
-            }
+            nativelyDefinedBagTypes = MKReflection.GetConcreteSubclassesOf<MKBag>();
         }
 
         

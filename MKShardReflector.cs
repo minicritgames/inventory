@@ -40,25 +40,18 @@ namespace Minikit.Inventory.Internal
 
         static MKShardReflector()
         {
-            foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
+            foreach (Type type in MKReflection.GetConcreteSubclassesOf<MKShard>())
             {
-                foreach (Type type in assembly.GetTypes())
+                if (type.GetCustomAttribute<MKShardAttribute>() is MKShardAttribute shardAttribute // Make sure it has a shard attribute
+                    && !string.IsNullOrEmpty(shardAttribute.shardType) // and the shard attribute has a valid type
+                    && type.GetCustomAttribute<MKShardHiddenAttribute>() == null) // Ignore shards that requested to be hidden
                 {
-                    if (type.IsSubclassOf(typeof(MKShard))
-                        && !type.IsAbstract // Ignore abstract classes since we don't want to register them
-                        && type.GetCustomAttribute<MKShardAttribute>() is MKShardAttribute shardAttribute // Make sure it has a shard attribute
-                        && !string.IsNullOrEmpty(shardAttribute.shardType) // and the shard attribute has a valid type
-                        && type.GetCustomAttribute<MKShardHiddenAttribute>() == null) // Ignore shards that requested to be hidden
+                    nativelyDefinedShardTypesByName.Add(shardAttribute.shardType, type);
+
+                    if (type.GetCustomAttribute<MKShardDynamicCompanionAttribute>() is MKShardDynamicCompanionAttribute companionAttribute
+                        && companionAttribute.companionType != null)
                     {
-                        nativelyDefinedShardTypesByName.Add(shardAttribute.shardType, type);
-
-                        if (type.GetCustomAttribute<MKShardDynamicCompanionAttribute>() is MKShardDynamicCompanionAttribute companionAttribute
-                            && companionAttribute.companionType != null)
-                        {
-                            companionShardTypes.Add(type, companionAttribute.companionType);
-                        }
-
-                        //Debug.Log($"Registered {nameof(MKShard)}: {type.Name} with key {shardAttribute.shardType}");
+                        companionShardTypes.Add(type, companionAttribute.companionType);
                     }
                 }
             }
