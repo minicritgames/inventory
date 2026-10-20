@@ -39,6 +39,20 @@ namespace Minikit.Inventory
             return false;
         }
 
+        public virtual bool PlaceItem(MKItem _item, MKSlot _slot)
+        {
+            foreach (MKBag bag in bags)
+            {
+                if (bag.TryPlace(_item, _slot))
+                {
+                    OnItemAdded(_item);
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         public bool RemoveItem(MKItem _item)
         {
             foreach (MKBag bag in bags)

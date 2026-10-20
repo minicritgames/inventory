@@ -23,6 +23,23 @@ namespace Minikit.Inventory
 
         public abstract bool Remove(MKItem _item);
 
+        public virtual bool TryPlace(MKItem _item, MKSlot _slot)
+        {
+            foreach (MKSlot slot in IterateSlots())
+            {
+                if (slot == _slot
+                    && slot.CanHoldItem(_item))
+                {
+                    slot.SetItem(_item);
+                    RaiseChanged();
+
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         protected void RaiseChanged()
         {
             OnChanged?.Invoke();
