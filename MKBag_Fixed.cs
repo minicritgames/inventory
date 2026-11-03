@@ -45,18 +45,22 @@ namespace Minikit.Inventory
 
         public override bool Remove(MKItem _item)
         {
+            bool removed = false;
             foreach (MKSlot slot in slots)
             {
                 if (slot.item == _item)
                 {
                     slot.SetItem(null);
-                    RaiseChanged();
-
-                    return true;
+                    removed = true;
                 }
             }
 
-            return false;
+            if (removed)
+            {
+                RaiseChanged();
+            }
+
+            return removed;
         }
     }
 } // Minikit.Inventory namespace
