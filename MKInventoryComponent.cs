@@ -70,10 +70,12 @@ namespace Minikit.Inventory
         public int GetItemCount(MKItemDefinitionScriptableObject _definition)
         {
             int total = 0;
+            HashSet<MKItem> counted = new();
             foreach (MKSlot slot in IterateSlots())
             {
                 if (slot.item != null
-                    && slot.item.itemDefinition == _definition)
+                    && slot.item.itemDefinition == _definition
+                    && counted.Add(slot.item))
                 {
                     total += slot.item.stackCount;
                 }
@@ -99,7 +101,8 @@ namespace Minikit.Inventory
                 }
 
                 if (slot.item != null
-                    && slot.item.itemDefinition == _definition)
+                    && slot.item.itemDefinition == _definition
+                    && !emptied.Contains(slot.item))
                 {
                     int available = slot.item.stackCount;
                     if (available > _count)
